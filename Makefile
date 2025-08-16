@@ -1,13 +1,23 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11
+
+SRC_DIR = .
+BUILD_DIR = build
+
 SRCS = main.c
-OBJS = $(SRCS:.c=.o)
-ipv4 = ipv4-chat
+OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o)
 
-all: ipv4
+TARGET = $(BUILD_DIR)/ipv4-chat
 
-ipv4: $(OBJS)
-	$(CC) $(CFLAGS) $(SRCS) -o $(ipv4) -pthread
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) -pthread
+
+$(BUILD_DIR)/%.o: $(SRCS)
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $(SRCS) -o $(OBJS)
 
 clean:
-	rm -rf ${OBJS}
+	rm -rf $(BUILD_DIR)
